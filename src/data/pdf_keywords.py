@@ -6,7 +6,7 @@ import pandas as pd
 
 PDF_DIR = "data/bill/pdf"
 OUTPUT_TSV = "data/bill/pdf_keywords.tsv"
-TOP_N_KEYWORDS = 5
+TOP_N_KEYWORDS = 3
 
 tagger = MeCab()
 
