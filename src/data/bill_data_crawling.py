@@ -16,6 +16,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 def configure_driver():
     chrome_options = Options()
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
@@ -49,7 +50,7 @@ def main():
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.tableCol01 table tbody"))
         )
 
-        for page in range(1, 2):
+        for page in range(1, 15):
             print(f"페이지 {page} 처리 중...")
             rows = tbody.find_elements(By.TAG_NAME, "tr")
 
@@ -73,7 +74,6 @@ def main():
                 except:
                     pass
 
-                pdf_path = ""
                 detail_url = ""
 
                 if bill_id:
@@ -103,7 +103,7 @@ def main():
                                 continue
 
                         if pdf_clicked:
-                            pdf_path = wait_for_new_file(before_files)
+                            wait_for_new_file(before_files)
                     except Exception as e:
                         print(f"상세페이지 오류: {e}")
 
@@ -116,17 +116,13 @@ def main():
                     "제안일자": proposal_date,
                     "의결일자": resolution_date,
                     "상세페이지 URL": detail_url,
-                    "PDF 파일 경로": pdf_path,
                 })
-
-                time.sleep(1)
 
             # 페이지 이동
             if page < 10:
                 try:
                     next_btn = driver.find_element(By.LINK_TEXT, str(page + 1))
                     next_btn.click()
-                    time.sleep(2)
                     tbody = WebDriverWait(driver, 15).until(
                         EC.presence_of_element_located((By.CSS_SELECTOR, "div.tableCol01 table tbody"))
                     )
